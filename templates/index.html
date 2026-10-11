@@ -4,19 +4,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ConectaPro</title>
+    <title>ConectaUnB</title>
     <link rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
     <header class="topo">
-        <h1>ConectaPro</h1>
+        <h1>ConectaUnB</h1>
         <nav>
             <a href="#publicacoes">Feed</a>
             <a href="#vagas">Vagas</a>
         </nav>
     </header>
+
+
+<form action="{{ url_for('publicar', ordenar=criterio) }}"
+      method="POST"
+      class="card formulario-post">
+
+    <h3>Compartilhe uma novidade profissional</h3>
+
+    <input type="text"
+           name="autor"
+           placeholder="Seu nome"
+           required>
+
+    <input type="text"
+           name="cargo"
+           placeholder="Seu cargo ou formação"
+           required>
+
+    <textarea name="texto"
+              placeholder="O que você gostaria de compartilhar?"
+              rows="4"
+              required></textarea>
+
+    <button type="submit">Publicar</button>
+</form>
+
 
     <main class="container">
 
@@ -25,6 +51,23 @@
             <p class="subtitulo">
                 Compartilhe conhecimento e acompanhe profissionais.
             </p>
+
+        <form method="GET" action="/" class="filtro">
+            <label for="ordenar">Ordenar publicações:</label>
+
+            <select name="ordenar" id="ordenar" onchange="this.form.submit()">
+                <option value="data"
+                    {% if criterio == "data" %}selected{% endif %}>
+                    Mais recentes
+                </option>
+
+                <option value="curtidas"
+                    {% if criterio == "curtidas" %}selected{% endif %}>
+                    Mais curtidas
+                </option>
+            </select>
+        </form>
+
 
             {% for post in publicacoes %}
                 <article class="card">

@@ -1,5 +1,6 @@
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
+from algoritmo.merge_sort import merge_sort
 
 app = Flask(__name__)
 
@@ -55,12 +56,56 @@ vagas = [
 
 
 @app.route("/")
+
+@app.route("/")
 def inicio():
+    criterio = request.args.get("ordenar", "data")
+
+    print("Critério escolhido:", criterio)
+
+    if criterio == "curtidas":
+        publicacoes_ordenadas = merge_sort(
+            publicacoes,
+            chave=lambda post: post["curtidas"]
+        )
+    else:
+        criterio = "data"
+        publicacoes_ordenadas = merge_sort(
+            publicacoes,
+            chave=lambda post: post["data"]
+        )
+
+    print("Ordem do feed:")
+    for post in publicacoes_ordenadas:
+        print(post["autor"], "-", post["curtidas"], "curtidas")
+
     return render_template(
         "index.html",
-        publicacoes=publicacoes,
-        vagas=vagas
+        publicacoes=publicacoes_ordenadas,
+        vagas=vagas,
+        criterio=criterio
     )
+
+
+@app.route("/publicar", methods=["POST"])
+def publicar():
+    autor = request.form.get("autor", "").strip()
+    cargo = request.form.get("cargo", "").strip()
+    texto = request.form.get("texto", "").strip()
+
+    if autor and cargo and texto:
+        publicacoes.append({
+            "autor": autor,
+            "cargo": cargo,
+            "texto": texto,
+            "data": __import__("datetime").date.today().isoformat(),
+            "curtidas": 0
+        })
+
+    return redirect(url_for(
+        "inicio",
+        ordenar=request.args.get("ordenar", "data")
+    ))
 
 
 if __name__ == "__main__":

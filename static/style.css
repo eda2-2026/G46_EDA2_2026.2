@@ -105,3 +105,61 @@ footer {
         flex-direction: column;
     }
 }
+
+
+.filtro {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.filtro label {
+    font-weight: bold;
+    color: #183b66;
+}
+
+.filtro select {
+    padding: 10px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: white;
+    color: #263247;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.filtro select:focus {
+    outline: 2px solid #5b8fd1;
+    outline-offset: 2px;
+}
+
+.formulario-post {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.formulario-post input,
+.formulario-post textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font: inherit;
+}
+
+.formulario-post button {
+    background: #183b66;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.formulario-post button:hover {
+    background: #24558c;
+}
