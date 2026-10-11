@@ -1,6 +1,7 @@
 
 from flask import Flask, render_template, request, redirect, url_for
 from algoritmo.merge_sort import merge_sort
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -11,7 +12,7 @@ publicacoes = [
         "cargo": "Estudante de Engenharia de Software",
         "texto": "Comecei a estudar algoritmos de ordenação! "
                  "É incrível entender como os dados podem ser organizados.",
-        "data": "2026-10-11",
+    "data": datetime.strptime("2026-10-11 14:30", "%Y-%m-%d %H:%M"),
         "curtidas": 12
     },
     {
@@ -19,7 +20,7 @@ publicacoes = [
         "cargo": "Desenvolvedor Python",
         "texto": "Compartilhando meu novo projeto desenvolvido "
                  "com Python e Flask!",
-        "data": "2026-10-10",
+        "data": datetime.strptime("2026-10-10 16:45", "%Y-%m-%d %H:%M"),
         "curtidas": 28
     },
     {
@@ -27,7 +28,7 @@ publicacoes = [
         "cargo": "Estudante de Tecnologia",
         "texto": "Nunca pare de aprender. Cada pequeno projeto "
                  "é uma oportunidade de evoluir.",
-        "data": "2026-10-09",
+        "data": datetime.strptime("2026-10-09 10:15", "%Y-%m-%d %H:%M"),
         "curtidas": 19
     }
 ]
@@ -98,7 +99,7 @@ def publicar():
             "autor": autor,
             "cargo": cargo,
             "texto": texto,
-            "data": __import__("datetime").date.today().isoformat(),
+            "data": datetime.now(),
             "curtidas": 0
         })
 
