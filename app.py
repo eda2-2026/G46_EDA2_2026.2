@@ -2,68 +2,56 @@
 from flask import Flask, render_template, request, redirect, url_for
 from algoritmo.merge_sort import merge_sort
 from datetime import datetime
+import sqlite3
 
 app = Flask(__name__)
 
-# Publicações fictícias para começar
-publicacoes = [
-    {
-        "autor": "Ana Silva",
-        "cargo": "Estudante de Engenharia de Software",
-        "texto": "Comecei a estudar algoritmos de ordenação! "
-                 "É incrível entender como os dados podem ser organizados.",
-    "data": datetime.strptime("2026-10-11 14:30", "%Y-%m-%d %H:%M"),
-        "curtidas": 12
-    },
-    {
-        "autor": "Pedro Santos",
-        "cargo": "Desenvolvedor Python",
-        "texto": "Compartilhando meu novo projeto desenvolvido "
-                 "com Python e Flask!",
-        "data": datetime.strptime("2026-10-10 16:45", "%Y-%m-%d %H:%M"),
-        "curtidas": 28
-    },
-    {
-        "autor": "Julia Costa",
-        "cargo": "Estudante de Tecnologia",
-        "texto": "Nunca pare de aprender. Cada pequeno projeto "
-                 "é uma oportunidade de evoluir.",
-        "data": datetime.strptime("2026-10-09 10:15", "%Y-%m-%d %H:%M"),
-        "curtidas": 19
-    }
-]
+# Conecta ao banco de dados
+def conectar_banco():
+    conexao = sqlite3.connect("conectunb.db")
+    conexao.row_factory = sqlite3.Row
+    conexao.execute("PRAGMA foreign_keys = ON")
+    return conexao
 
-# Vagas fictícias
-vagas = [
-    {
-        "empresa": "Tech Solutions",
-        "cargo": "Estágio em Desenvolvimento Python",
-        "local": "Brasília - DF",
-        "modalidade": "Híbrido"
-    },
-    {
-        "empresa": "Inova Tecnologia",
-        "cargo": "Desenvolvedor(a) Júnior",
-        "local": "Remoto",
-        "modalidade": "Remoto"
-    },
-    {
-        "empresa": "Data Brasil",
-        "cargo": "Estágio em Dados",
-        "local": "Brasília - DF",
-        "modalidade": "Presencial"
-    }
-]
-
-
-@app.route("/")
 
 @app.route("/")
 def inicio():
     criterio = request.args.get("ordenar", "data")
 
-    print("Critério escolhido:", criterio)
+    # Busca as publicações e os dados dos usuários
+    conexao = conectar_banco()
 
+    registros = conexao.execute("""
+        SELECT
+            publicacoes.id,
+            usuarios.nome AS autor,
+            usuarios.cargo AS cargo,
+            publicacoes.texto,
+            publicacoes.data,
+            publicacoes.curtidas
+        FROM publicacoes
+        JOIN usuarios
+            ON publicacoes.usuario_id = usuarios.id
+    """).fetchall()
+
+    # Busca as vagas
+    registros_vagas = conexao.execute("""
+        SELECT empresa, cargo, local, modalidade, descricao
+        FROM vagas
+    """).fetchall()
+
+    conexao.close()
+
+    publicacoes = []
+
+    for registro in registros:
+        post = dict(registro)
+        post["data"] = datetime.fromisoformat(post["data"])
+        publicacoes.append(post)
+
+    vagas = [dict(vaga) for vaga in registros_vagas]
+
+    # Ordena usando o Merge Sort
     if criterio == "curtidas":
         publicacoes_ordenadas = merge_sort(
             publicacoes,
@@ -75,10 +63,6 @@ def inicio():
             publicacoes,
             chave=lambda post: post["data"]
         )
-
-    print("Ordem do feed:")
-    for post in publicacoes_ordenadas:
-        print(post["autor"], "-", post["curtidas"], "curtidas")
 
     return render_template(
         "index.html",
@@ -95,18 +79,46 @@ def publicar():
     texto = request.form.get("texto", "").strip()
 
     if autor and cargo and texto:
-        publicacoes.append({
-            "autor": autor,
-            "cargo": cargo,
-            "texto": texto,
-            "data": datetime.now(),
-            "curtidas": 0
-        })
+        conexao = conectar_banco()
 
-    return redirect(url_for(
-        "inicio",
-        ordenar=request.args.get("ordenar", "data")
-    ))
+        try:
+            # Procura o usuário pelo nome e cargo.
+            usuario = conexao.execute("""
+                SELECT id
+                FROM usuarios
+                WHERE nome = ? AND cargo = ?
+                LIMIT 1
+            """, (autor, cargo)).fetchone()
+
+            if usuario is None:
+                cursor = conexao.execute("""
+                    INSERT INTO usuarios (nome, cargo)
+                    VALUES (?, ?)
+                """, (autor, cargo))
+                usuario_id = cursor.lastrowid
+            else:
+                usuario_id = usuario["id"]
+
+            # Salva a publicação no banco.
+            conexao.execute("""
+                INSERT INTO publicacoes
+                    (usuario_id, texto, data, curtidas)
+                VALUES (?, ?, ?, ?)
+            """, (
+                usuario_id,
+                texto,
+                datetime.now().isoformat(timespec="seconds"),
+                0
+            ))
+
+            conexao.commit()
+
+        finally:
+            conexao.close()
+
+    criterio = request.args.get("ordenar", "data")
+
+    return redirect(url_for("inicio", ordenar=criterio))
 
 
 if __name__ == "__main__":
