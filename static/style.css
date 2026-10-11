@@ -1,0 +1,107 @@
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f3f5f8;
+    color: #263247;
+}
+
+.topo {
+    background: #183b66;
+    color: white;
+    padding: 18px 8%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.topo h1 {
+    margin: 0;
+}
+
+.topo nav {
+    display: flex;
+    gap: 24px;
+}
+
+.topo a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 850px;
+    margin: 35px auto;
+    padding: 0 20px;
+}
+
+section {
+    margin-bottom: 45px;
+    scroll-margin-top: 20px;
+}
+
+h2 {
+    color: #183b66;
+}
+
+.subtitulo {
+    color: #687589;
+    margin-bottom: 22px;
+}
+
+.card {
+    background: white;
+    border: 1px solid #e1e6ed;
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 16px;
+    box-shadow: 0 3px 10px #172b4d0a;
+}
+
+.card h3 {
+    margin: 0 0 8px;
+}
+
+.cargo,
+.empresa {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.rodape-card {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: #53657d;
+    border-top: 1px solid #edf0f4;
+    padding-top: 14px;
+    margin-top: 18px;
+    font-size: 14px;
+}
+
+.vaga {
+    border-left: 4px solid #23856d;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    color: #64748b;
+}
+
+@media (max-width: 600px) {
+    .topo {
+        padding: 18px;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .rodape-card {
+        flex-direction: column;
+    }
+}

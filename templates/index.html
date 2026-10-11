@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConectaPro</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <header class="topo">
+        <h1>ConectaPro</h1>
+        <nav>
+            <a href="#publicacoes">Feed</a>
+            <a href="#vagas">Vagas</a>
+        </nav>
+    </header>
+
+    <main class="container">
+
+        <section id="publicacoes">
+            <h2>Feed profissional</h2>
+            <p class="subtitulo">
+                Compartilhe conhecimento e acompanhe profissionais.
+            </p>
+
+            {% for post in publicacoes %}
+                <article class="card">
+                    <h3>{{ post.autor }}</h3>
+                    <p class="cargo">{{ post.cargo }}</p>
+                    <p>{{ post.texto }}</p>
+
+                    <div class="rodape-card">
+                        <span>♥ {{ post.curtidas }} curtidas</span>
+                        <span>{{ post.data }}</span>
+                    </div>
+                </article>
+            {% endfor %}
+        </section>
+
+        <section id="vagas">
+            <h2>Oportunidades de emprego</h2>
+            <p class="subtitulo">
+                Encontre sua próxima oportunidade profissional.
+            </p>
+
+            {% for vaga in vagas %}
+                <article class="card vaga">
+                    <h3>{{ vaga.cargo }}</h3>
+                    <p class="empresa">{{ vaga.empresa }}</p>
+                    <p>📍 {{ vaga.local }}</p>
+                    <p>Modalidade: {{ vaga.modalidade }}</p>
+                </article>
+            {% endfor %}
+        </section>
+
+    </main>
+
+    <footer>
+        <p>ConectaPro — conectando pessoas e oportunidades.</p>
+    </footer>
+
+</body>
+</html>
