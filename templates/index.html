@@ -1,109 +1,39 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ConectaUnB</title>
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ConectaUnB</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-
-    <header class="topo">
-        <h1>ConectaUnB</h1>
-        <nav>
-            <a href="#publicacoes">Feed</a>
-            <a href="#vagas">Vagas</a>
-        </nav>
-    </header>
-
-
-<form action="{{ url_for('publicar', ordenar=criterio) }}"
-      method="POST"
-      class="card formulario-post">
-
-    <h3>Compartilhe uma novidade profissional</h3>
-
-    <input type="text"
-           name="autor"
-           placeholder="Seu nome"
-           required>
-
-    <input type="text"
-           name="cargo"
-           placeholder="Seu cargo ou formação"
-           required>
-
-    <textarea name="texto"
-              placeholder="O que você gostaria de compartilhar?"
-              rows="4"
-              required></textarea>
-
-    <button type="submit">Publicar</button>
-</form>
-
-
-    <main class="container">
-
+  <header class="topo">
+    <a class="marca" href="#publicacoes"><span>C</span>ConectaUnB</a>
+    <nav><a class="ativo" href="#publicacoes">⌂ Início</a><a href="#vagas">▣ Vagas</a></nav>
+    <button class="perfil" type="button">AC</button>
+  </header>
+  <main class="container">
+    <section class="boas-vindas">
+      <div><p class="sobretitulo">COMUNIDADE UNIVERSITÁRIA</p><h1>Olá, Ana! 👋</h1><p>Compartilhe ideias, descubra oportunidades e construa conexões.</p></div>
+      <div class="online"><div><span>JS</span><span>MC</span><span>LP</span></div><small><b>128 pessoas</b> conectadas hoje</small></div>
+    </section>
+    <div class="layout">
+      <aside class="lateral">
+        <div class="resumo"><span class="avatar grande">AC</span><b>Ana Costa</b><small>Engenharia de Software</small><a href="#publicacoes">Ver perfil</a></div>
+        <nav class="atalhos"><a class="selecionado" href="#publicacoes">⌂ Meu feed</a><a href="#vagas">▣ Oportunidades</a><a href="#publicacoes">♙ Minha rede</a><a href="#publicacoes">▱ Itens salvos</a></nav>
+      </aside>
+      <div class="conteudo">
         <section id="publicacoes">
-            <h2>Feed profissional</h2>
-            <p class="subtitulo">
-                Compartilhe conhecimento e acompanhe profissionais.
-            </p>
-
-        <form method="GET" action="/" class="filtro">
-            <label for="ordenar">Ordenar publicações:</label>
-
-            <select name="ordenar" id="ordenar" onchange="this.form.submit()">
-                <option value="data"
-                    {% if criterio == "data" %}selected{% endif %}>
-                    Mais recentes
-                </option>
-
-                <option value="curtidas"
-                    {% if criterio == "curtidas" %}selected{% endif %}>
-                    Mais curtidas
-                </option>
-            </select>
-        </form>
-
-
-            {% for post in publicacoes %}
-                <article class="card">
-                    <h3>{{ post.autor }}</h3>
-                    <p class="cargo">{{ post.cargo }}</p>
-                    <p>{{ post.texto }}</p>
-
-                    <div class="rodape-card">
-                        <span>♥ {{ post.curtidas }} curtidas</span>
-                        <span>{{ post.data }}</span>
-                    </div>
-                </article>
-            {% endfor %}
+          <div class="cabecalho-secao"><div><p class="sobretitulo">ATUALIZAÇÕES</p><h2>Seu feed</h2></div><form method="GET" action="/" class="filtro"><label for="ordenar">Ordenar por</label><select name="ordenar" id="ordenar" onchange="this.form.submit()"><option value="data" {% if criterio == "data" %}selected{% endif %}>Mais recentes</option><option value="curtidas" {% if criterio == "curtidas" %}selected{% endif %}>Mais curtidas</option></select></form></div>
+          <form action="{{ url_for('publicar', ordenar=criterio) }}" method="POST" class="criar-post">
+            <span class="avatar">AC</span><div class="campos-post"><input type="text" name="autor" placeholder="Seu nome" required><input type="text" name="cargo" placeholder="Seu cargo ou formação" required><textarea name="texto" placeholder="Compartilhe uma novidade com a comunidade..." rows="3" required></textarea><div><span>✦ Compartilhe conhecimento</span><button type="submit">Publicar ↑</button></div></div>
+          </form>
+          <div class="lista-posts">{% for post in publicacoes %}<article class="post"><header><span class="avatar avatar-post">{{ post.autor[:2]|upper }}</span><div><h3>{{ post.autor }}</h3><p>{{ post.cargo }}</p><small>{{ post.data }} · Público</small></div><button type="button">•••</button></header><p class="texto-post">{{ post.texto }}</p><div class="curtidas">♥ {{ post.curtidas }} curtidas</div><footer><button type="button">♡ Curtir</button><button type="button">▢ Comentar</button><button type="button">↗ Compartilhar</button></footer></article>{% endfor %}</div>
         </section>
-
-        <section id="vagas">
-            <h2>Oportunidades de emprego</h2>
-            <p class="subtitulo">
-                Encontre sua próxima oportunidade profissional.
-            </p>
-
-            {% for vaga in vagas %}
-                <article class="card vaga">
-                    <h3>{{ vaga.cargo }}</h3>
-                    <p class="empresa">{{ vaga.empresa }}</p>
-                    <p>📍 {{ vaga.local }}</p>
-                    <p>Modalidade: {{ vaga.modalidade }}</p>
-                </article>
-            {% endfor %}
-        </section>
-
-    </main>
-
-    <footer>
-        <p>ConectaUnB — conectando pessoas e oportunidades.</p>
-    </footer>
-
+        <section id="vagas" class="vagas"><div class="cabecalho-secao"><div><p class="sobretitulo">PARA VOCÊ</p><h2>Oportunidades</h2></div><a href="#vagas">Ver todas →</a></div><div class="lista-vagas">{% for vaga in vagas %}<article class="vaga"><span class="empresa">{{ vaga.empresa[:1]|upper }}</span><div><h3>{{ vaga.cargo }}</h3><p>{{ vaga.empresa }}</p><small>⌖ {{ vaga.local }} · {{ vaga.modalidade }}</small></div><button type="button">♧</button></article>{% endfor %}</div></section>
+      </div>
+    </div>
+  </main>
+  <footer class="rodape">ConectaUnB · Feito para conectar talentos e oportunidades.</footer>
 </body>
 </html>
