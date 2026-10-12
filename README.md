@@ -2,7 +2,7 @@
 
 O **ConectaUnB** é um protótipo de uma rede social profissional voltada para a comunidade universitária, inspirado na ideia de conectar estudantes, compartilhar conhecimentos e divulgar oportunidades profissionais.
 
-🌐 **Acesse o projeto:** [https://g46-eda2-2026-2.onrender.com](https://g46-eda2-2026-2.onrender.com)
+🌐 **Acesse o projeto:** [https://g46-eda2-2026-2.onrender.com](https://g46-eda2-2026-2.onrender.com) | [https://youtu.be/af6YJ9LMo5o](https://youtu.be/af6YJ9LMo5o)
 
 ## 📌 Sobre o projeto
 
